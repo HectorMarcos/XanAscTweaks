@@ -31,6 +31,8 @@ local defaults = {
         afk_msg = "",
 		filterCriminal = false,
         filterHardcore = false,
+		filterKeeperScroll = false,
+        filterPosture = false,
     },
 }
 
@@ -48,6 +50,8 @@ local function updateFilter()
 	filters["%[.-The.-Motherlode.-%]"] = addon.db.profile.filterMotherlode or nil
 	filters["|TInterface\\Icons\\inv_alliancewareffort:16|t.-has spawned"] = addon.db.profile.filterALeader or nil
 	filters["|TInterface\\Icons\\inv_hordewareffort:16|t.-has spawned"] = addon.db.profile.filterHLeader or nil
+	filters["Keeper's Scroll"] = addon.db.profile.filterKeeperScroll or nil
+    filters["Posture Check"] = addon.db.profile.filterPosture or nil
 end
 
 local function config_toggle_get(info) return addon.db.profile[info[#info]] end
@@ -88,6 +92,8 @@ local options = {
 						r["filterHLeader"] = L["Horde Leader Messages"]
 						r["filterCriminal"] = L["Criminal Intent Messages"]
 						r["filterHardcore"] = L["Hardcore Mode Messages"]
+						r["filterKeeperScroll"] = L["Keeper's Scroll Messages"]
+						r["filterPosture"] = L["Posture Check Messages"]
 
 						return r
 					end,
@@ -269,6 +275,12 @@ function XAT:CommandHandler(msg)
 	elseif cmd == "hardcore" then
 		self.db.profile.filterHardcore = toggle(self.db.profile.filterHardcore, "Hardcore Mode Messages")
 		updateFilter()
+	elseif cmd == "keeperscroll" then
+		self.db.profile.filterKeeperScroll = toggle(self.db.profile.filterKeeperScroll, "Keeper's Scroll Messages")
+		updateFilter()
+	elseif cmd == "posture" then
+		self.db.profile.filterPosture = toggle(self.db.profile.filterPosture, "Posture Check Messages")
+		updateFilter()
 	else
 		XAT:printmsg("Use '/xat all on|off' to quickly toggle all options.  Or use '/xat option` where option can be one of;")
 		local options = {
@@ -293,6 +305,8 @@ function XAT:CommandHandler(msg)
 			status(self.db.profile.afkmsg) .. " `afkmsg` is replacing your default afk message with a custom one.",
 			status(self.db.profile.filterCriminal) .. " `criminal` is hiding Criminal Intent messages.",
 			status(self.db.profile.filterHardcore) .. " `hardcore` is hiding Hardcore mode messages.",
+			status(self.db.profile.filterKeeperScroll) .. " `keeperscroll` is hiding Keeper's Scroll messages.",
+			status(self.db.profile.filterPosture) .. " `posture` is hiding Posture Check messages.",
 		}
 		for _, option in pairs(options) do
 			XAT:printmsg(option, true)
