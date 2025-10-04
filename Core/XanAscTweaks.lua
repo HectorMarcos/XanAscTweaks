@@ -8,33 +8,37 @@ local filters = {}
 local reload -- track whether a change has been made that requires a reload to take effect
 
 local defaults = {
-	["profile"] = {
-		filtersay = false,
-		filteryell = false,
-		hideAscButton = false,
-		filtertrial = false,
-		filterMEA = false,
-		filterAuto = false,
-		filterNew = false,
-		filterAscension = false,
-		filterWorld = false,
-		filterTravelGuide = false,
-		filterBAUAsc = false,
-		filterKeeper = false,
-		filterMotherlode = false,
-		filterDP = false,
-		filterTwitch = false,
-		autoGrabVanity = false,
-		filterALeader = false,
-		filterHLeader = false,
-		afkmsg = false,
-		afk_msg = "",
-	},
+    ["profile"] = {
+        filtersay = false,
+        filteryell = false,
+        hideAscButton = false,
+        filtertrial = false,
+        filterMEA = false,
+        filterAuto = false,
+        filterNew = false,
+        filterAscension = false,
+        filterWorld = false,
+        filterTravelGuide = false,
+        filterBAUAsc = false,
+        filterKeeper = false,
+        filterMotherlode = false,
+        filterDP = false,
+        filterTwitch = false,
+        autoGrabVanity = false,
+        filterALeader = false,
+        filterHLeader = false,
+        afkmsg = false,
+        afk_msg = "",
+		filterCriminal = false,
+        filterHardcore = false,
+    },
 }
 
 -- update chat system filters
 local function updateFilter()
 	filters["Htrial:%d-:"] = addon.db.profile.filtertrial or nil -- Trials
+	filters["Criminal Intent"] = addon.db.profile.filterCriminal or nil
+    filters["Hardcore"] = addon.db.profile.filterHardcore or nil
 	filters["%[.-Resolute.-Mode.-%]"] = addon.db.profile.filtertrial or nil
 	filters["%[.-Nightmare.-%]"] = addon.db.profile.filtertrial or nil
 	filters["Hitem:1179126"] = addon.db.profile.filterMEA or nil -- Mystic Enchanting Altar
@@ -82,6 +86,8 @@ local options = {
 						r["filterTwitch"] = L["'twitch' in chat"]
 						r["filterALeader"] = L["Alliance Leader Messages"]
 						r["filterHLeader"] = L["Horde Leader Messages"]
+						r["filterCriminal"] = L["Criminal Intent Messages"]
+						r["filterHardcore"] = L["Hardcore Mode Messages"]
 
 						return r
 					end,
@@ -257,6 +263,12 @@ function XAT:CommandHandler(msg)
 	elseif cmd == "hleader" then
 		self.db.profile.filterHLeader = toggle(self.db.profile.filterHLeader, "Horde Leader Spawn Alerts")
 		updateFilter()
+	elseif cmd == "criminal" then
+		self.db.profile.filterCriminal = toggle(self.db.profile.filterCriminal, "Criminal Intent Messages")
+		updateFilter()
+	elseif cmd == "hardcore" then
+		self.db.profile.filterHardcore = toggle(self.db.profile.filterHardcore, "Hardcore Mode Messages")
+		updateFilter()
 	else
 		XAT:printmsg("Use '/xat all on|off' to quickly toggle all options.  Or use '/xat option` where option can be one of;")
 		local options = {
@@ -279,6 +291,8 @@ function XAT:CommandHandler(msg)
 			status(self.db.profile.filterALeader) .. " `aleader` is hiding Alliance Leader spawn alerts.",
 			status(self.db.profile.filterHLeader) .. " `hleader` is hiding Horde Leader spawn alerts.",
 			status(self.db.profile.afkmsg) .. " `afkmsg` is replacing your default afk message with a custom one.",
+			status(self.db.profile.filterCriminal) .. " `criminal` is hiding Criminal Intent messages.",
+			status(self.db.profile.filterHardcore) .. " `hardcore` is hiding Hardcore mode messages.",
 		}
 		for _, option in pairs(options) do
 			XAT:printmsg(option, true)
