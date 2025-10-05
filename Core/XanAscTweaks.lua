@@ -33,6 +33,7 @@ local defaults = {
         filterHardcore = false,
 		filterKeeperScroll = false,
         filterPosture = false,
+		filterVoidPortal = false,
     },
 }
 
@@ -53,6 +54,7 @@ local function updateFilter()
     filters["%[.-Keeper's Scroll.-%]"] = addon.db.profile.filterKeeperScroll or nil
     filters["%[.-Posture Check.-%]"] = addon.db.profile.filterPosture or nil
 	filters["%[.-Titan Scroll.-%]"] = addon.db.profile.filterTitanScroll or nil
+	filters["%[.-Void Portal.-%]"] = addon.db.profile.filterVoidPortal or nil
 end
 
 local function config_toggle_get(info) return addon.db.profile[info[#info]] end
@@ -96,6 +98,7 @@ local options = {
 						r["filterKeeperScroll"] = L["Keeper's Scroll Messages"]
 						r["filterPosture"] = L["Posture Check Messages"]
 						r["filterTitanScroll"] = L["Titan Scroll Messages"]
+						r["filterVoidPortal"] = L["Void Portal Messages"]
 
 						return r
 					end,
@@ -286,6 +289,9 @@ function XAT:CommandHandler(msg)
 	elseif cmd == "titanscroll" then
 		self.db.profile.filterTitanScroll = toggle(self.db.profile.filterTitanScroll, "Titan Scroll Messages")
 		updateFilter()
+	elseif cmd == "voidportal" then
+		self.db.profile.filterVoidPortal = toggle(self.db.profile.filterVoidPortal, "Void Portal Messages")
+		updateFilter()
 	else
 		XAT:printmsg("Use '/xat all on|off' to quickly toggle all options.  Or use '/xat option` where option can be one of;")
 		local options = {
@@ -313,6 +319,7 @@ function XAT:CommandHandler(msg)
 			status(self.db.profile.filterKeeperScroll) .. " `keeperscroll` is hiding Keeper's Scroll messages.",
 			status(self.db.profile.filterPosture) .. " `posture` is hiding Posture Check messages.",
 			status(self.db.profile.filterTitanScroll) .. " `titanscroll` is hiding Titan Scroll messages.",
+			status(self.db.profile.filterVoidPortal) .. " `voidportal` is hiding Void Portal messages.",
 		}
 		for _, option in pairs(options) do
 			XAT:printmsg(option, true)
