@@ -39,8 +39,6 @@ local defaults = {
 -- update chat system filters
 local function updateFilter()
 	filters["Htrial:%d-:"] = addon.db.profile.filtertrial or nil -- Trials
-	filters["Criminal Intent"] = addon.db.profile.filterCriminal or nil
-    filters["Hardcore"] = addon.db.profile.filterHardcore or nil
 	filters["%[.-Resolute.-Mode.-%]"] = addon.db.profile.filtertrial or nil
 	filters["%[.-Nightmare.-%]"] = addon.db.profile.filtertrial or nil
 	filters["Hitem:1179126"] = addon.db.profile.filterMEA or nil -- Mystic Enchanting Altar
@@ -50,8 +48,11 @@ local function updateFilter()
 	filters["%[.-The.-Motherlode.-%]"] = addon.db.profile.filterMotherlode or nil
 	filters["|TInterface\\Icons\\inv_alliancewareffort:16|t.-has spawned"] = addon.db.profile.filterALeader or nil
 	filters["|TInterface\\Icons\\inv_hordewareffort:16|t.-has spawned"] = addon.db.profile.filterHLeader or nil
-	filters["Keeper's Scroll"] = addon.db.profile.filterKeeperScroll or nil
-    filters["Posture Check"] = addon.db.profile.filterPosture or nil
+    filters["%[.-Criminal Intent.-%]"] = addon.db.profile.filterCriminal or nil
+    filters["%[.-Hardcore.-%]"] = addon.db.profile.filterHardcore or nil
+    filters["%[.-Keeper's Scroll.-%]"] = addon.db.profile.filterKeeperScroll or nil
+    filters["%[.-Posture Check.-%]"] = addon.db.profile.filterPosture or nil
+	filters["%[.-Titan Scroll.-%]"] = addon.db.profile.filterTitanScroll or nil
 end
 
 local function config_toggle_get(info) return addon.db.profile[info[#info]] end
@@ -94,6 +95,7 @@ local options = {
 						r["filterHardcore"] = L["Hardcore Mode Messages"]
 						r["filterKeeperScroll"] = L["Keeper's Scroll Messages"]
 						r["filterPosture"] = L["Posture Check Messages"]
+						r["filterTitanScroll"] = L["Titan Scroll Messages"]
 
 						return r
 					end,
@@ -281,6 +283,9 @@ function XAT:CommandHandler(msg)
 	elseif cmd == "posture" then
 		self.db.profile.filterPosture = toggle(self.db.profile.filterPosture, "Posture Check Messages")
 		updateFilter()
+	elseif cmd == "titanscroll" then
+		self.db.profile.filterTitanScroll = toggle(self.db.profile.filterTitanScroll, "Titan Scroll Messages")
+		updateFilter()
 	else
 		XAT:printmsg("Use '/xat all on|off' to quickly toggle all options.  Or use '/xat option` where option can be one of;")
 		local options = {
@@ -307,6 +312,7 @@ function XAT:CommandHandler(msg)
 			status(self.db.profile.filterHardcore) .. " `hardcore` is hiding Hardcore mode messages.",
 			status(self.db.profile.filterKeeperScroll) .. " `keeperscroll` is hiding Keeper's Scroll messages.",
 			status(self.db.profile.filterPosture) .. " `posture` is hiding Posture Check messages.",
+			status(self.db.profile.filterTitanScroll) .. " `titanscroll` is hiding Titan Scroll messages.",
 		}
 		for _, option in pairs(options) do
 			XAT:printmsg(option, true)
